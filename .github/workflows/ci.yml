@@ -1,3 +1,5 @@
+# Usage: Automates building and testing each time a user in this repository pushes changes to main.
+
 name: CI Pipeline  ## Workflow name shown in GitHub Actions UI
 
 on:
