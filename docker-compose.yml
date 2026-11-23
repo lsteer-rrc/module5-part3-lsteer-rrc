@@ -38,7 +38,6 @@ services:
     depends_on:
       - backend
       - transactions
-      - studentportfolio
 
 volumes:
   mongo_data:
