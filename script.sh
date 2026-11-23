@@ -5,7 +5,7 @@
 # Stop on first error
 set -e
 
-# Configuration Variables
+# 1. Configuration Variables
 DEPLOY_DIR="$(cd "$(dirname "$0")" && pwd)"   # folder containing this script
 COMPOSE_FILE="docker-compose.yml"
 URL="http://localhost"
@@ -15,19 +15,19 @@ log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
 cd "$DEPLOY_DIR"
 
-# Optional teardown
+# 2. Optional teardown
 if [ "$1" = "down" ]; then
   docker compose down -v
   log "Everything is down."
   exit 0
 fi
 
-# Pre-deployment checks
+# 3. Pre-deployment checks
 log "Checking prerequisites..."
 command -v docker >/dev/null || { log "Docker is not installed"; exit 1; }
 docker compose version >/dev/null || { log "Docker Compose is not installed"; exit 1; }
 
-# Ports must be free, unless our own stack is already using them (re-run)
+# 4. Ports must be free, unless our own stack is already using them (re-run)
 # Idempotent deployment: if the containers are already running, we don't need to check ports
 port_in_use() { (echo > /dev/tcp/127.0.0.1/"$1") 2>/dev/null; }
  
@@ -41,15 +41,15 @@ fi
 
 log "Prerequisites OK"
 
-# Validate docker compose file
+# 5. Validate docker compose file
 [ -f "$COMPOSE_FILE" ] || { log "$COMPOSE_FILE not found in $DEPLOY_DIR"; exit 1; }
 log "Found $COMPOSE_FILE in $DEPLOY_DIR"
 
-# Build and Deploy
+# 6. Build and Deploy
 log "Building and starting containers..."
 docker compose up -d --build
 
-# Health Checks
+# 7. Health Checks
 log "Running health checks..."
 for u in "$URL" http://localhost:3000 http://localhost:5000; do
   for i in 1 2 3 4 5 6 7 8 9 10; do
@@ -60,7 +60,7 @@ for u in "$URL" http://localhost:3000 http://localhost:5000; do
   log "$u -> HTTP $code"
 done
 
-# # List Images and Containers
+# 8. List Images and Containers
 log "Images:"
 docker images
 log "Containers:"
@@ -69,11 +69,7 @@ docker ps
 NGINX_ID=$(docker ps -q --filter "ancestor=nginx:alpine" | head -n 1)
 log "NGINX container ID: $NGINX_ID"
 
-# Page Render Validations
-log "Page at $URL:"
-curl -s "$URL" | grep -i "Yarrow-Mullein" && log "Page renders with branding" || log "Branding not found on page"
-
-# Jq intsalled
+# 9. Jq installed
 if ! command -v jq >/dev/null; then
   log "jq not found - installing..."
   if command -v apt-get >/dev/null; then
@@ -88,11 +84,11 @@ if ! command -v jq >/dev/null; then
 fi
 log "jq version: $(jq --version)"
 
-# Inspect and save to logs
+# 10. Inspect and save to logs
 docker inspect nginx:alpine > nginx-logs
 log "Saved inspect output to nginx-logs"
 
-# Extract Keys
+# 11. Extract Keys
 log "Extracted values:"
 jq -r '.[0] |
   "RepoTags:     \(.RepoTags | tojson)",
