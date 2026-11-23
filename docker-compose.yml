@@ -24,14 +24,8 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017
       - PORT=3000  # Explicitly set port
-    ports:
-      - "3000:3000"  # Expose for debugging
     depends_on:
       - mongo
-
-  # Frontend service (serves static files)
-  studentportfolio:
-    build: ./studentportfolio
     
   # Dedicated Nginx reverse proxy
   nginx:
