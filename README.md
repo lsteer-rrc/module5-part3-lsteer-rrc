@@ -18,7 +18,6 @@ The Student Portfolio Microservice aims to provide a platform where students can
 
     MongoDB: A NoSQL database used by the backend service to store all application data (e.g., student profiles, project details, skills).
 
-
 +------------------+     +-------------------+     +-------------------+     +--------------+
 |      Client      | <-> |   Nginx (Port 80) | <-> |     Frontend      |     |              |
 | (Web Browser)    |     | (Reverse Proxy)   |     | (Static Files)    |     |              |
