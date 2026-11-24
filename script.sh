@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Yarrow-Mullein Bank Application idempotent deployment script
 # Run with: ./script.sh      Tear down with: ./script.sh down
 # Works with git bash on windows, or any Linux terminal with docker and docker-compose installed.
