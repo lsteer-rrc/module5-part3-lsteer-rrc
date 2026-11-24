@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo # type: ignore
 from werkzeug.security import generate_password_hash, check_password_hash
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId # type: ignore
 import datetime
 from datetime import timezone
 import os
